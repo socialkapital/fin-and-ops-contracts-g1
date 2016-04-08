@@ -1,21 +1,6 @@
-contract registry { 
-    address public admin; 
-    mapping (address => bool) public shareholder;
-    mapping (uint => address) public list;
-    bool public state = false; 
-    uint no =0;
-    function init( ) {
-        if (state == false){    state = true;     admin = msg.sender;
-        }else { throw;} 
-    } 
-    function register ( address ne) {    if (admin == msg.sender) {     shareholder[ne] = true;   no = no+1; list[no] =ne; }    else { throw; }    }
-    function remove (address rmv)  { if (admin == msg.sender) { shareholder[rmv] = false; }  else { throw; } }
-    function isshareholder(address add) returns (bool val) { val = shareholder[add];}
-    function fetch_admin () returns (address add) { add = admin;} 
-}
-
+#import registry
 contract voting {
-    bool state = false; 
+    bool state = false;
     address reg;
     address admin;
     uint r_no;
@@ -26,7 +11,7 @@ contract voting {
     mapping (address => voter) voters;
     struct round_details {
         uint r_no;
-        uint total; 
+        uint total;
         bool state;
         uint start;
         uint stop;
@@ -54,9 +39,9 @@ contract voting {
     }
     function init_round(uint r_no, uint b_start,uint b_stop,bool pub) {
         if (round[r_no].state == false && msg.sender==admin  ){
-            round[r_no].start == b_start; 
-            round[r_no].stop == b_stop; 
-            round[r_no].total == 0; 
+            round[r_no].start == b_start;
+            round[r_no].stop == b_stop;
+            round[r_no].total == 0;
             round[r_no].pub == pub;
         }
     }
@@ -103,7 +88,7 @@ contract voting {
             voters[vot].state == false;
         }
     }
-    
+
 
     function status_candiate( address candi) returns (uint votes){
         if (round[r_no].candi.t == candi){
@@ -114,7 +99,7 @@ contract voting {
         if (m.isshareholder(add) == true && round[r_no].stop > block.number){
             round[r_no].add.pri = add;
             round[r_no].add.state = true;
-            round[r_no].total = round[r_no].total +1; 
+            round[r_no].total = round[r_no].total +1;
         }
     }
     function add_proxy( address add, uint r_no) {
@@ -122,12 +107,11 @@ contract voting {
             round[r_no].add.proxy = add;
         }
     }
-    function vote (bool vote, uint r_no) { 
+    function vote (bool vote, uint r_no) {
         if (( round[r_no].add.pri == msg.sender || round[r_no].add.proxy == msg.sender ) && round[r_no].stop > block.number){
             round[r_no].add.voted == true;
-            
+
         }
-    }  
+    }
 */
 }
-
