@@ -1,3 +1,4 @@
+
 contract registry { 
     address public admin; 
     mapping (address => bool) shareholder;
