@@ -1,10 +1,7 @@
-SECURITY WARNING
-All internal functions have been set to public to testing purposes. Voting default values have not been set.
-
 
 /////////////////////////////////////////////////////////////////////////////
 contract SokTreasuryOne {
-//////////////////////////////KEYS//////////////////////////////////
+/////////////////////////COMMITTEE KEYS//////////////////////////////////
 address Apollo = 0x06400992be45bc64a52b5c55d3df84596d6cb4a1;
 /////////////////////CONTRACT VARIABLES/////////////////////////////
 uint8 OperationsAlloc = 5; //equivalent to 5% of florin sales
@@ -28,7 +25,7 @@ TreasuryOne t1;
 /////////////////////////INITIALIZATION PROTOCOL////////////////////////
 function SokTreasuryOne () {
 
-ConfTre = block.number + 5000;
+ConfTre = block.number + 13000;
 }
 
 function InitTreasuryOne(uint8 accountid_st1,address addr_st1){
@@ -51,8 +48,11 @@ uint256 RegistryAmount = FloAmount + OperationsAmount;
 /*set up sok mint one contract call*/
 SokMintOne
 SokMintOneCall = SokMintOne(TreasuryOnePass[5].addr);
+/*send florin to operations committee*/
 (SokMintOneCall.SendFlorin(TreasuryOnePass[4].addr,OperationsAmount));
+/*send florin to buyer*/
 (SokMintOneCall.SendFlorin(Beneficiary,FloAmount));
+/*add the issued florin to total florins issued*/
 t1.TotalFloIssued += RegistryAmount;
 return true;
 }//////////////////////////////////////end of florin sale function 
@@ -63,12 +63,12 @@ return t1.TotalFloIssued;
 }////////////////////////////////////////////////////////////////////
 
 ////////////////////NEWTON PAYMENTS ////////////////////////
-function POV (address _voter, uint256 _pov) returns (bool sucess){
+function POV (address _voter, uint256 _pov){
 uint256 _povv = _pov / 100;
 /*set up call to sok mint one contract*/
 SokMintOne
 SokMintOneCall = SokMintOne(TreasuryOnePass[5].addr);
-
+/*pay voting reward*/
 if(TreasuryOnePass[6].addr == msg.sender){
 if(TreasuryOnePass[6].authorised == false) throw;
 (SokMintOneCall.SendNewton(_voter,_povv));
@@ -124,11 +124,13 @@ if(beneficary_addr != TreasuryOnePass[1].addr &&
 beneficary_addr != TreasuryOnePass[2].addr &&
 beneficary_addr != TreasuryOnePass[3].addr &&
 beneficary_addr != TreasuryOnePass[4].addr) throw;
+uint256 WeiValue = coin_amount * WeiConverter;
 
-uint256 WeiValue = coin_amount * WeiConverter;	
+/*set up call to sok mint one*/	
 SokMintOne
 SokMintOneCall = SokMintOne(TreasuryOnePass[5].addr);
 
+/*send coin to beneficiary committee wallet*/
 if(coin_code == 1 && !beneficary_addr.send(WeiValue)){
 throw;	
 }
