@@ -1,6 +1,3 @@
-SECURITY WARNING
-All internal functions have been set to public to testing purposes. Voting default values have not been set.
-
 //////////////////////////////////////////////////////////////
 contract SokVoteRegister {
 /////////////////COMMITTEE KEYS///////////////////////////////
