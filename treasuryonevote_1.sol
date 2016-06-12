@@ -1,5 +1,3 @@
-SECURITY WARNING
-All internal functions have been set to public to testing purposes. Voting default values have not been set.
 
 //////////////////////////////////////////////////////////////////////
 contract TreasuryOneVote_1 {
@@ -90,13 +88,13 @@ uint256 AmountYesShares, uint256 TotalVoteShares, string VotePassed);
 
 /*constructor function*/	
 function TreasuryOneVote_1 (){
-Core.ShareQuorum = 60;	
-Core.YesShares = 70;
-Core.YesVoters = 70;
+Core.ShareQuorum = 30;	
+Core.YesShares = 60;
+Core.YesVoters = 60;
 Core.ActivePro = false;
 Core.ActiveFundingPro = false; 
 Core.ActiveRulesPro = false;
-Core.ConfTV1 = block.number + 5000;	
+Core.ConfTV1 = block.number + 13000;	
 }	
 /////////////////////////INITIALIZATION PROTOCOL////////////////////////
 function InitTV1(uint8 accountid_tov1,address addr_tov1){
@@ -113,7 +111,7 @@ if(msg.sender != Apollo) throw; //check who is calling the function
 /*set up contract call*/
 SokMintOne
 SokMintOneCall = SokMintOne(TreOneVotePass[5].addr);
-if((SokMintOneCall.SirBal(msg.sender)) < 1000) throw;
+if((SokMintOneCall.SirBal(msg.sender)) < 1000000) throw;
 delete Prop;
 delete ChangeVoteCalc;
 delete ProposalFund;
@@ -146,7 +144,7 @@ SokMintOne
 SokMintOneCall = SokMintOne(TreOneVotePass[5].addr);
 if((SokMintOneCall.SirBal(msg.sender)) < 2) throw;
 if (NewtonValue > 2) throw;
-if (Duration > 16000) throw;
+if (Duration > 1440) throw;
 if (Core.ActivePro == true) throw;
 if (Core.ActiveRulesPro == false && ChangeVoteRules ==1) throw;
 if (Core.ActiveFundingPro == false && FundProposal == 1) throw;
@@ -183,9 +181,9 @@ uint8 ChangeYesVoters) returns (bool sucess){
 SokMintOne
 SokMintOneCall = SokMintOne(TreOneVotePass[5].addr);
 if((SokMintOneCall.SirBal(msg.sender)) < 1000) throw;
-if (ChangeShareQuorum < 40 || ChangeShareQuorum > 90) throw;
-if (ChangeYesShares < 40 || ChangeYesShares > 90) throw;
-if (ChangeYesVoters < 40 || ChangeYesVoters > 90) throw;
+if (ChangeShareQuorum < 20 || ChangeShareQuorum > 90) throw;
+if (ChangeYesShares < 20 || ChangeYesShares > 90) throw;
+if (ChangeYesVoters < 20 || ChangeYesVoters > 90) throw;
 if (Core.ActivePro == true) throw;
 ChangeVoteCalc.ChangeShareQuorum = ChangeShareQuorum;
 ChangeVoteCalc.ChangeYesShares = ChangeYesShares;
@@ -206,7 +204,11 @@ SokMintOneCall = SokMintOne(TreOneVotePass[5].addr);
 if((SokMintOneCall.SirBal(msg.sender)) < 2) throw;
 if(CoinCode1 < 1) throw;
 if(CoinCode1 == 2) throw;	
-if(CoinCode1 > 4) throw;	
+if(CoinCode1 > 4) throw;
+if(BeneficiaryAddr1 != TreOneVotePass[1].addr &&
+BeneficiaryAddr1 != TreOneVotePass[2].addr &&
+BeneficiaryAddr1 != TreOneVotePass[3].addr &&
+BeneficiaryAddr1 != TreOneVotePass[4].addr) throw;
 ProposalFund.CoinCode1 = CoinCode1;
 ProposalFund.CoinAmount1 = CoinAmount1;
 ProposalFund.BeneficiaryAddr1 = BeneficiaryAddr1;	
@@ -290,7 +292,6 @@ return true;
 /*function that calculates voting outcome*/
 function YesResult() internal returns (bool){
 uint256 Fraction = 100;	
-
 uint256 VotingQuorum = Prop.IssuedFlorin * (Core.ShareQuorum / Fraction);    
 uint256 YesVoteShares = (VoteResult.AmountYesShares * Fraction) / VoteResult.TotalVoteShares;
 uint256 YesVoteVoters = (VoteResult.NumYesVotes * Fraction) / VoteResult.NumVoters;
