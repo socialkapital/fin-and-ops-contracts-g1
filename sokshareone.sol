@@ -1,6 +1,5 @@
-SECURITY WARNING
-All internal functions have been set to public to testing purposes. Voting default values have not been set.
-
+ 
+               
 //////////////////////////////////////////////////////////////////////////
 contract SokShareOne {
 ///////////////////////////////COMMITTEE KEYS/////////////////////////////
@@ -33,34 +32,33 @@ TradingData td1;
 /////////////////////////INITIALIZATION PROTOCOL////////////////////////
 function SokShareOne(){
 
-ConfShareOne = block.number + 3000;
-td1.SharePrice = 1000;
+ConfShareOne = block.number + 13000;
+td1.SharePrice = 1400;
 BuySuspension = 1;
 SaleSuspension = 1;	
 }///////////////////////////////////////
 
 function InitShareOne( uint8 accountid_ss1,address addr_ss1){
-if(msg.sender != Apollo) throw;         //check who is calling the function  
+if(msg.sender != Apollo) throw;          //check who is calling the function  
 if(block.number > ConfShareOne) throw;  //check if the initialization window has closed
 
 ShareOnePass[accountid_ss1].authorised = true;
 ShareOnePass[accountid_ss1].addr = addr_ss1;	
 }////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////UPDATE EXCHANGE RATE///////////////////////////
-function UpdatePrice(uint256 _price) returns (bool updated){
+/////////////UPDATE EXCHANGE RATE BY COMMITTEE OR VOTE/////////////
+function UpdatePrice(uint256 _price){
 /*security checks*/
 if(ShareOnePass[1].addr == msg.sender){
 if(ShareOnePass[1].authorised != true) throw; 
 td1.SharePrice = _price;	
 }  
 if(ShareOnePass[12].addr == msg.sender){
-if(ShareOnePass[12].authorised != true) throw; 
 td1.SharePrice = _price;	
 }  	
 }///////////////////////////////////////////////////////
 
-/////////////////////////SUSPEND SELLING FLORIN///////////////////////////
+//////////SUSPEND SELLING FLORIN BY COMMITTEE OR VOTE///////////////
 function SuspendSelling (uint8 _suspendsale) {
 /*security and rules checks*/
 if(ShareOnePass[1].addr == msg.sender){ 
@@ -73,7 +71,7 @@ SaleSuspension = _suspendsale;
 } 
 }///////////////////////////////////////////////////////
 
-///////////////////////SUSPEND BUYING FLORIN///////////////////////////
+//////////////SUSPEND BUYING FLORIN BY COMMITTEE OR VOTE/////////////
 function SuspendBuying (uint8 _suspendbuy){
 /*security and rules checks*/
 if(ShareOnePass[1].addr == msg.sender){ 
@@ -81,12 +79,11 @@ if(ShareOnePass[1].authorised != true) throw;
 BuySuspension = _suspendbuy;
 }  
 if(ShareOnePass[14].addr == msg.sender){ 
-if(ShareOnePass[14].authorised != true) throw;   
 BuySuspension = _suspendbuy;	
 }    	
 }///////////////////////////////////////////////////////
 
-///////////////////CHANGE ZEUS KEY AUTHORITY///////////////
+///////CHANGE TREASURY COMMITTEE KEY AUTHORITY BY VOTE///////////////
 function AuthChange (uint8 _authchange) {
 
 if(ShareOnePass[13].addr == msg.sender && _authchange == 0){
@@ -139,7 +136,6 @@ address Seller = msg.sender;
 /*set up treasury one contract call*/
 SokTreasuryOne
 SokTreasuryOneCall = SokTreasuryOne(ShareOnePass[8].addr);
-
 uint256 WeiBalance = (SokTreasuryOneCall.Balance());
 uint256 IssuedFlorin = (SokTreasuryOneCall.IssuedShares());
 uint256 WeiDue = (_florin * WeiBalance) / IssuedFlorin;
@@ -167,7 +163,7 @@ uint256 _numdepotransc, uint256 _numwithtransc){
 return (td1.TotalEtherDepo,td1.TotalEtherWith,td1.NumDepoTransc,td1.NumWithTransc);	
 }//////////////////////////////////////////////end of share_one_info function
 
-///////////////////////CONTRACT STATUS/////////////////////////
+/////////////////////CONTRACT TRADING INFORMATION/////////////////////////
 function ShareOneState() 
 returns (uint8 suspend_sale,uint8 suspend_buy,uint256 share_price){
 		
